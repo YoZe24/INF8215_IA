@@ -81,38 +81,58 @@ def depthFirstSearch(problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
+    from util import Stack
+    marked = set()
+    stack = Stack()
+    start = problem.getStartState()
+    stack.push((start,[]))
+    while not stack.isEmpty():
+        (node, path) = stack.pop()
+        if node not in marked:
+            if problem.isGoalState(node):
+                return path
 
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 1 ICI
-    '''
-
-    util.raiseNotDefined()
-
+            marked.add(node)
+            for successor in problem.getSuccessors(node):
+                pos, direction, cost = successor
+                stack.push((pos, path + [direction]))
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
+    from util import Queue
+    marked = set()
+    queue = Queue()
+    start = problem.getStartState()
+    queue.push((start, []))
+    while not queue.isEmpty():
+        (node, path) = queue.pop()
+        if node not in marked:
+            if problem.isGoalState(node):
+                return path
 
-
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 2 ICI
-    '''
-
-    util.raiseNotDefined()
+            marked.add(node)
+            for successor in problem.getSuccessors(node):
+                pos, direction, cost = successor
+                queue.push((pos, path + [direction]))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
+    from util import PriorityQueue
+    marked = set()
+    pq = PriorityQueue()
+    start = problem.getStartState()
+    pq.push((start,[], 0), 0)
+    while not pq.isEmpty():
+        (node, path, total_cost) = pq.pop()
+        if node not in marked:
+            if problem.isGoalState(node):
+                return path
 
-
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 3 ICI
-    '''
-
-    util.raiseNotDefined()
+            marked.add(node)
+            for successor in problem.getSuccessors(node):
+                pos, direction, cost = successor
+                pq.push((pos, path + [direction], total_cost + cost), total_cost + cost)
 
 def nullHeuristic(state, problem=None):
     """
@@ -123,12 +143,21 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 4 ICI
-    '''
+    from util import PriorityQueue
+    marked = set()
+    pq = PriorityQueue()
+    start = problem.getStartState()
+    pq.push((start,[], 0), 0)
+    while not pq.isEmpty():
+        (node, path, total_cost) = pq.pop()
+        if node not in marked:
+            if problem.isGoalState(node):
+                return path
 
-    util.raiseNotDefined()
-
+            marked.add(node)
+            for successor in problem.getSuccessors(node):
+                pos, direction, cost = successor
+                pq.push((pos, path + [direction], total_cost + cost), total_cost + cost + heuristic(pos, problem))
 
 # Abbreviations
 bfs = breadthFirstSearch
