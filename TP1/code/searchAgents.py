@@ -360,11 +360,28 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-    pos = state
+    pos, corners = state
+    x,y = pos
 
-    return 0
+    closest = (float("inf"),"")
+    for c in corners:
+        cx,cy = c
+
+        manhattan = abs(cx - x) + abs(cy - y)
+        if manhattan < closest[0]:
+            closest = (manhattan, c)
+
+    farthest = (0,"")
+    for c in corners:
+        cx, cy = c
+        dist, pos = closest
+        dx, dy = pos
+
+        manhattan = abs(cx - dx) + abs(cy - dy)
+        if manhattan > farthest[0]:
+            farthest = (manhattan, c)
+
+    return closest[0] + farthest[0]
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -456,12 +473,17 @@ def foodHeuristic(state, problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    position, food_grid = state
+    food_list = food_grid.asList()
+    distances = []
 
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 7 ICI
-    '''
+    for food in food_list:
+        if (position, food) in problem.heuristicInfo:
+            distances += [problem.heuristicInfo[(position, food)]]
+        else:
+            search_problem = PositionSearchProblem(problem.startingGameState, start = position, goal = food, warn = False, visualize = False)
+            cost = len(search.bfs(search_problem))
+            problem.heuristicInfo[(position, food)] = cost
+            distances += [cost]
 
-
-    return 0
-
+    return 0 if len(distances) == 0 else max(distances)
