@@ -1,2 +1,1 @@
-# INF8215_IA
-Polytechnique Montréal // INF8215 - Intelligence artif.: méthodes et algorithmes
+# Repository for the project of the course INF8215 - Intelligence artif.: méthodes et algorithmes at Polytechnique Montréal
